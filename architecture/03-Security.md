@@ -82,6 +82,7 @@ Daily administrative account receives privileged access through PIM-enabled Secu
 Break Glass account remains permanently assigned to the Global Administrator role and is excluded from Conditional Access policies to ensure emergency access.
 Test User account is used to validate that a system meets requirements and works as intended in real-world scenarios before deployment.
 
+
 ## Implemented Security Controls
 
 The following controls have been implemented:
@@ -96,6 +97,108 @@ The following controls have been implemented:
 * Break Glass account
 
 
+
+## Authentication Methods
+
+### Overview
+
+Authentication methods have been configured to align with Microsoft's passwordless authentication strategy while maintaining secure fallback options for account recovery and exceptional scenarios.
+
+A dedicated security group `sg_ca_require_mfa` is used to target authentication method policies. A separate exclusion group `sg_ca_exclude_mfa` is used for emergency access (break glass) accounts and service accounts that must not be affected by user MFA policies.
+
+
+
+### Enabled authentication methods
+
+| Method                      | Purpose                                            |
+|-----------------------------|----------------------------------------------------|
+| Microsoft Authenticator     | Primary MFA method and passwordless authentication |
+| Passkey (FIDO2)             | Phishing-resistant passwordless authentication     |
+| Temporary Access Pass (TAP) | Secure onboarding and MFA registration             |
+| SMS                         | Fallback MFA method only                           |
+
+
+
+### Disabled authentication methods
+
+| Method                           | Reason                                                                        |
+|----------------------------------|-------------------------------------------------------------------------------|
+| Voice Call                       | Legacy authentication method, not recommended for new deployments             |
+| Email OTP                        | Might be configured later for Azure AD B2B guest users                        |
+| QR Code Authentication           |  Designed for frontline worker scenarios. Not applicable to this environment  |
+| Hardware OATH Tokens             | Not required for this lab environment                                         |
+| Certificate-based Authentication | Not required for this lab environment                                         |
+| Verified ID                      | Out of scope for this project                                                 |
+
+
+
+### SMS Authentication Configuration
+
+SMS authentication is enabled only as a fallback authentication method.
+
+Configuration:
+
+- Authentication Method: Enabled
+- Target Group: sg_ca_require_mfa
+- Excluded Group: sg_ca_exclude_mfa
+- Use for sign-in: Disabled
+
+Disabling 'Use for sign-in' prevents SMS from being used as a primary authentication method while still allowing it as an MFA verification option.
+
+
+### Microsoft Authenticator
+
+Microsoft Authenticator is configured as the primary authentication method.
+
+Configuration includes:
+
+- Target Group: sg_ca_require_mfa
+- Excluded Group: sg_ca_exclude_mfa
+
+- Passwordless authentication
+- Push notifications
+- Number matching
+- Passkey registration support
+
+Microsoft Authenticator is the preferred authentication method for all standard users.
+
+
+### Passkeys (FIDO2)
+
+Passkeys are enabled to provide phishing-resistant authentication.
+
+Configuration:
+
+- Target Group: sg_ca_require_mfa
+- Excluded Group: sg_ca_exclude_mfa
+- Profile: Default passkey profile
+
+
+
+### Temporary Access Pass (TAP)
+
+Temporary Access Pass is enabled to support secure onboarding.
+
+Typical onboarding flow:
+
+1. Administrator creates a Temporary Access Pass.
+2. User signs in using TAP.
+3. User registers Microsoft Authenticator.
+4. (Optional) User registers a Passkey (FIDO2).
+5. TAP expires automatically.
+
+This approach eliminates the need to distribute permanent passwords during onboarding.
+
+
+### Authentication Design Principles
+
+The authentication configuration follows Microsoft's Zero Trust recommendations:
+
+- Passwordless authentication preferred wherever possible.
+- Phishing-resistant authentication methods enabled.
+- Legacy authentication methods minimized.
+- Multiple secure authentication methods available for recovery.
+- Emergency access accounts excluded from user authentication policies.
 
 # Configuration
 
@@ -131,11 +234,12 @@ The following configuration will be completed during this phase:
 * [x] Security Administrator configured as Eligible
 * [x] Break Glass account configured
 * [x] PIM activation successfully tested
+* [x] Configure Authentication Methods
+* [x] Configure Multi-Factor Authentication
 
 ## Pending Tasks
 
-* [ ] Configure Authentication Methods
-* [ ] Configure Multi-Factor Authentication
+
 * [ ] Configure Conditional Access
 * [ ] Configure Azure RBAC
 * [ ] Configure Identity Protection
@@ -145,11 +249,14 @@ The following configuration will be completed during this phase:
 
 # Evidence
 
-| Item                  | Screenshot                                               |
-| --------------------- | -------------------------------------------------------- |
-| PIM Overview          | images/screenshots/security/pim-assignments.png             |
-
-
+| Item                            | Screenshot                                                       |
+| ------------------------------- | ---------------------------------------------------------------- |
+| PIM Overview                    | images/screenshots/security/pim-assignments.png                  |
+| MFA settings                    | images/screenshots/security/mfa-settings.png                     |
+| Authenticator settings          | images/screenshots/security/microsoft-authenticator-settings.png | 
+| Authentication methods overview | images/screenshots/security/authentication-methods-overview.png  |
+| Temporary Access Pass settings  | images/screenshots/security/tap-settings.png                     |
+| Passkey settings                | images/screenshots/security/passkey-settings.png                 |  
 
 
 # Lessons Learned
@@ -168,9 +275,6 @@ The next phase continues the Security Foundation implementation.
 
 Objectives:
 
-* Configure Authentication Methods
-* Configure Multi-Factor Authentication
-* Configure Conditional Access policies
 * Configure Azure Role Based Access Control (RBAC)
 * Configure Microsoft Entra Identity Protection
 * Validate the Zero Trust administrative model

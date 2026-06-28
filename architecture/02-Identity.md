@@ -64,11 +64,10 @@ Membership type is configured according to each group's purpose:
 - Assigned membership for administrative and resource access groups.
 - Dynamic membership for user targeting groups such as Intune assignments.
 
-"Microsoft Entra roles can be assigned to the group" setting is enabled for groups sg_pim_global_administrators and sg_vm_administrators 
+The "Microsoft Entra roles can be assigned to the group" setting is enabled for `sg_pim_global_administrators`.
 
-Group owner:
+Other Security Groups use standard Microsoft Entra Security Group functionality for Azure RBAC, Microsoft Intune assignments and license management.
 
-- ga-pauli
 
 
 
@@ -176,14 +175,13 @@ The following configuration will be completed during the next phase:
 
 # Next Phase
 
-The next phase focuses on Privileged Access Management.
+The next phase focuses on Security Foundation and Privileged Access Management.
 
 Objectives:
 
 - Configure Azure Role Based Access Control (RBAC)
-- Configure Microsoft Entra Privileged Identity Management (PIM)
-- Assign Global Administrator as an Eligible role
-- Configure Break Glass permanent access
-- Configure Multi-Factor Authentication
 - Configure Conditional Access policies
+- Configure Multi-Factor Authentication
+- Configure Identity Protection policies
+- Validate privileged access configuration
 - Implement least privilege administrative access
