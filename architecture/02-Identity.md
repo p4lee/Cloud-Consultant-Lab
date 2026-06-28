@@ -30,6 +30,8 @@ The following design decisions were made before implementing identities:
 - Microsoft licenses are assigned using Security Groups instead of direct user assignments.
 - Administrative accounts are separated from standard user accounts.
 - Cloud-only identity architecture is used.
+- All Security Groups use the `sg_` naming convention regardless of whether membership is assigned or dynamic.
+- Group membership type (Assigned or Dynamic) is documented in the implementation instead of being reflected in the group name.
 
 
 
@@ -47,18 +49,22 @@ The following design decisions were made before implementing identities:
 
 ## Security Groups
 
-| Group Name | Purpose |
-|------------|---------|
-| sg_global_administrators | Global Administrator role assignments |
-| sg_intune_users | Microsoft Intune user assignments |
-| sg_pim_eligible_administrators | Eligible administrators managed through PIM |
-| sg_test_users | Test user assignments |
-| sg_vm_administrators | Azure Virtual Machine administration |
 
-All groups are configured as:
+| Group Name                    | Membership | Purpose                                                                                                |
+|-------------------------------|------------|--------------------------------------------------------------------------------------------------------|
+| sg_pim_global_administrators  | Assigned   | Eligible Global Administrator assignments through Microsoft Entra Privileged Identity Management (PIM) |
+| sg_intune_users               | Dynamic    | Microsoft Intune user assignments                                                                      |
+| sg_test_users                 | Assigned   | Test user assignments                                                                                  |
+| sg_vm_administrators          | Assigned   | Azure Virtual Machine administration                                                                   |
 
-- Security Group
-- Assigned membership
+All groups are configured as Microsoft Entra Security Groups.
+
+Membership type is configured according to each group's purpose:
+
+- Assigned membership for administrative and resource access groups.
+- Dynamic membership for user targeting groups such as Intune assignments.
+
+"Microsoft Entra roles can be assigned to the group" setting is enabled for groups sg_pim_global_administrators and sg_vm_administrators 
 
 Group owner:
 
@@ -103,6 +109,8 @@ The following identity configuration has been completed:
 - Microsoft 365 Business Premium Trial activated
 - Microsoft Entra ID P2 Trial activated
 - Group-based licensing implemented
+- Security Groups standardized using the `sg_` naming convention
+- Dynamic Security Groups introduced for automated user targeting
 
 The following configuration will be completed during the next phase:
 
@@ -159,6 +167,8 @@ The following configuration will be completed during the next phase:
 - Dedicated administrative accounts significantly improve security.
 - Group-based licensing is more scalable than assigning licenses directly to users.
 - Security Groups simplify Azure RBAC administration.
+- Dynamic Security Groups reduce administrative effort by automating user assignments.
+- A consistent Security Group naming convention improves readability and long-term maintainability.
 - A verified custom domain creates a professional enterprise identity environment.
 - Administrative and standard user accounts should always be separated.
 - Identity governance should be implemented before assigning privileged roles.
