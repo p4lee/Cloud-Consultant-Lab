@@ -47,16 +47,40 @@ All privileged roles are assigned through Microsoft Entra Privileged Identity Ma
 
 Administrative users receive privileged access through Security Group membership.
 
+## Conditional Access Security Groups
+
+| Group Name        | Membership | Purpose                                                                                    |
+|-------------------|------------|--------------------------------------------------------------------------------------------|
+| sg_ca_require_mfa | Dynamic    | Targets all active users for Multi-Factor Authentication (MFA) Conditional Access policies |
+| sg_ca_exclude_mfa | Assigned   | Excludes emergency access and service accounts from MFA Conditional Access policies        |
+
+Conditional Access policies target dedicated Security Groups instead of individual users. This design improves scalability, simplifies administration and aligns with enterprise identity governance best practices.
+
+
+## Operational Security Groups
+
+| Group Name            | Membership | Purpose                                                          |
+|-----------------------|------------|------------------------------------------------------------------|
+| sg_intune_users       | Dynamic    | Targets users for Microsoft Intune assignments                   |
+| sg_vm_administrators  | Assigned   | Azure Virtual Machine administration                             |
+| sg_test_users         | Assigned   | Test user assignments for validation and user acceptance testing |
+
+Operational Security Groups are used to simplify administration by separating workload-specific permissions from privileged administrative access.
+
+
 
 
 ## Administrative Accounts
 
-| Account  | Purpose              | Assignment                     |
-| -------- | -------------------- | ------------------------------ |
-| ga-pauli | Daily administration | Eligible through PIM           |
-| bg-admin | Emergency access     | Permanent Global Administrator |
+| Account  | Purpose                  | Assignment                               |
+|----------|--------------------------|------------------------------------------|
+| ga-pauli | Daily administration     | Eligible through PIM                     |
+| bg-admin | Emergency access         | Permanent Global Administrator           |
+| test.user| User acceptance testing  | Member of operational groups as required |
 
-
+Daily administrative account receives privileged access through PIM-enabled Security Groups. 
+Break Glass account remains permanently assigned to the Global Administrator role and is excluded from Conditional Access policies to ensure emergency access.
+Test User account is used to validate that a system meets requirements and works as intended in real-world scenarios before deployment.
 
 ## Implemented Security Controls
 
