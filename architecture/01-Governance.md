@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The objective of this phase is to establish the governance foundation for the Cloud Consultant Lab before deploying any Azure resources. The goal is to ensure that all future deployments follow consistent naming, tagging, cost management and organizational standards.
+The objective of this phase is to establish the governance foundation for the Cloud Consult Lab before deploying any Azure resources. The goal is to ensure that all future deployments follow consistent naming, tagging, cost management and organizational standards.
 
 
 # Environment Overview
@@ -13,7 +13,7 @@ The objective of this phase is to establish the governance foundation for the Cl
 | Tenant Type    | Cloud-only               |
 | Region         | North Europe             |
 | Environment    | Test                     |
-| Subscription   | MPN - Pauli Pursiainen   |
+| Subscription   | CCLAB                    |
 | IaC            | Terraform (planned)      |
 
 
@@ -65,11 +65,11 @@ Every Azure resource must include the following tags.
 
 | Tag         | Value                |
 | ----------- | ------------------   |
-| Project     | Cloud-Consultant-Lab |
+| Project     | Cloud-Consult-Lab |
 | ProjectCode | CCLAB                |
 | Owner       | github.com/p4lee     |
 | Environment | Test                 |
-| ManagedB y  | Terraform            |
+| ManagedBy   | Terraform            |
 | CostCenter  | Learning             |
 | Department  | PersonalLab          |
 
@@ -83,7 +83,7 @@ Operational management
 
 # Cost Management
 
-The project budget is approximately 130 EUR of Azure credits.
+The project budget is approximately 172 EUR of Azure credits.
 
 An Azure Budget has been configured to monitor project spending throughout the duration of the lab project. The budget includes threshold-based email notifications to help control Azure costs.
 
@@ -150,7 +150,7 @@ Terraform selected as the Infrastructure as Code solution
 # Next Phase
 
 
-Phase 2 focuses on establishing the identity foundation for the Cloud Consultant Lab.
+Phase 2 focuses on establishing the identity foundation for the Cloud Consult Lab.
 
 Objectives:
 
